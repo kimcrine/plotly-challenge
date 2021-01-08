@@ -83,10 +83,10 @@ function getPlot(id) {
         // Create data variable 
         var data1 = [trace1];
   
-        // create the bubble plot
+        // Create bubble plot
         Plotly.newPlot("bubble", data1, layoutb); 
   
-        // Guage chart
+        // Gauge chart - currently having issues with the chart refreshing with the selected id
   
         var datag = [
           {
@@ -96,7 +96,7 @@ function getPlot(id) {
             value: parseFloat(wfreq),
             title: { text: "Weekly Washing Frequency", font: { size: 24 }},
             gauge: { 
-                axis: { range: [null, 10], tickwidth: 1},
+                axis: { range: [null, 9], tickwidth: 1},
                 bar: { color: "lightgray" },
                 bgcolor: "white",
                 borderwidth: 2,
@@ -106,7 +106,7 @@ function getPlot(id) {
                 { range: [2, 4], color: "orange" },
                 { range: [4, 6], color: "yellow" },
                 { range: [6, 8], color: "yellowgreen" },
-                { range: [8, 10], color: "green" }
+                { range: [8, 9], color: "green" }
                   ]}
               
           }
@@ -118,9 +118,9 @@ function getPlot(id) {
           };
         Plotly.newPlot("gauge", datag, layoutg);
       });
-  }  
+}  
 
-// Create the function to get the necessary data
+// Create function to get required data
 function getInfo(id) {
     // Read the json file to get data
     d3.json("samples.json").then((data)=> {
@@ -133,7 +133,7 @@ function getInfo(id) {
         // Filter meta data info by id
         var result = metadata.filter(meta => meta.id.toString() === id)[0];
 
-        // Select demographic panel to
+        // Select demographic panel
         var demographicInfo = d3.select("#sample-metadata");
         
         // Empty the demographic info panel each time before getting new id info
@@ -146,27 +146,27 @@ function getInfo(id) {
     });
 }
 
-// create the function for the change event
+// Create function for the change event
 function optionChanged(id) {
     getPlot(id);
     getInfo(id);
 }
 
-// create the function for the initial data rendering
+// Create function for the initial data rendering
 function init() {
-    // select dropdown menu 
+    // Select dropdown menu 
     var dropdown = d3.select("#selDataset");
 
-    // read the data 
+    // Read the data 
     d3.json("samples.json").then((data)=> {
         console.log(data)
 
-        // get the id data to the dropdwown menu
+        // Get the id data into the dropdown menu
         data.names.forEach(function(name) {
             dropdown.append("option").text(name).property("value");
         });
 
-        // call the functions to display the data and the plots to the page
+        // Call functions to display data with plots
         getPlot(data.names[0]);
         getInfo(data.names[0]);
     });
